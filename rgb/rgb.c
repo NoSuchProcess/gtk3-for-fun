@@ -3,19 +3,36 @@
 #include <cairo.h>
 
 static GtkWidget *drawing;
-static GtkWidget *rscale, *gscale, *bscale;
+static GtkWidget *rscale, *gscale, *bscale, *ascale;
 
 static gboolean drawing_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 {
 	const double red = gtk_range_get_value(GTK_RANGE(rscale));
 	const double green = gtk_range_get_value(GTK_RANGE(gscale));
 	const double blue = gtk_range_get_value(GTK_RANGE(bscale));
+	const double alpha = gtk_range_get_value(GTK_RANGE(ascale));
 
 	const int width = gtk_widget_get_allocated_width(widget);
 	const int height = gtk_widget_get_allocated_height(widget);
 
+	cairo_rectangle(cr, 0, 0, width / 5, height);
+	cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
+	cairo_fill(cr);
+	cairo_rectangle(cr, width / 5, 0, width / 5, height);
+	cairo_set_source_rgba(cr, 0.75, 0.75, 0.75, 1.0);
+	cairo_fill(cr);
+	cairo_rectangle(cr, width * 2 / 5, 0, width / 5, height);
+	cairo_set_source_rgba(cr, 0.50, 0.50, 0.50, 1.0);
+	cairo_fill(cr);
+	cairo_rectangle(cr, width * 3 / 5, 0, width / 5, height);
+	cairo_set_source_rgba(cr, 0.25, 0.25, 0.25, 1.0);
+	cairo_fill(cr);
+	cairo_rectangle(cr, width * 4 / 5, 0, width / 5, height);
+	cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
+	cairo_fill(cr);
+
 	cairo_rectangle(cr, 0, 0, width, height);
-	cairo_set_source_rgba(cr, red / 255, green / 255, blue / 255, 1.0);
+	cairo_set_source_rgba(cr, red / 255, green / 255, blue / 255, alpha / 255);
 	cairo_fill(cr);
 
 	return TRUE;
@@ -26,12 +43,13 @@ static void scale_change(GtkRange * range, gpointer user_data)
 	gtk_widget_queue_draw(drawing);
 }
 
-static GtkWidget *color_widget(const char *label, GtkWidget **scale_widget)
+static GtkWidget *color_widget(const char *label, GtkWidget **scale_widget, double preset)
 {
 	GtkWidget *frame;
 	GtkWidget *scale;
 
 	scale = gtk_scale_new_with_range(GTK_ORIENTATION_VERTICAL, 0, 255, 1);
+	gtk_range_set_value(GTK_RANGE(scale), preset);
 	gtk_widget_set_vexpand(scale, TRUE);
 	gtk_scale_set_digits(GTK_SCALE(scale), 0);
 	gtk_scale_set_draw_value(GTK_SCALE(scale), TRUE);
@@ -67,17 +85,19 @@ void app_activate(GtkApplication *app, gpointer data)
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 4);
 	gtk_grid_set_row_spacing(GTK_GRID(grid), 4);
 
-	frame = color_widget("Red", &rscale);
+	frame = color_widget("Red", &rscale, 0);
 	gtk_grid_attach(GTK_GRID(grid), frame, 0, 0, 1, 1);
-	frame = color_widget("Green", &gscale);
+	frame = color_widget("Green", &gscale, 0);
 	gtk_grid_attach(GTK_GRID(grid), frame, 1, 0, 1, 1);
-	frame = color_widget("Blue", &bscale);
+	frame = color_widget("Blue", &bscale, 0);
 	gtk_grid_attach(GTK_GRID(grid), frame, 2, 0, 1, 1);
+	frame = color_widget("Alpha", &ascale, 255);
+	gtk_grid_attach(GTK_GRID(grid), frame, 3, 0, 1, 1);
 
 	drawing = gtk_drawing_area_new();
 	gtk_widget_set_size_request(drawing, -1, 100);
 	g_signal_connect(drawing, "draw", G_CALLBACK(drawing_draw), NULL);
-	gtk_grid_attach(GTK_GRID(grid), drawing, 0, 1, 3, 1);
+	gtk_grid_attach(GTK_GRID(grid), drawing, 0, 1, 4, 1);
 
 	window = gtk_application_window_new(app);
 	gtk_window_set_title(GTK_WINDOW(window), "RGB");
