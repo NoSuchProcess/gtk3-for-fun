@@ -11,3 +11,9 @@ Bare window, nothing more.
 RGB color picker.
 
 ![rgb.png](screenshots/rgb.png)
+
+### clock
+
+Analog clocks.
+
+![clock.png](screenshots/clock.png)
