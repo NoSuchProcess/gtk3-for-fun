@@ -9,6 +9,9 @@ static inline gdouble to_radians(gdouble degrees)
 
 static gboolean draw(GtkDrawingArea *area, cairo_t *cr, gpointer user_data)
 {
+	static const GdkRGBA hour_color = {0.5, 0., 0.5, 1.};
+	static const GdkRGBA minute_color = {0., 0.5, 0.5, 0.75};
+
 	cairo_matrix_t matrix;
 	const int width = gtk_widget_get_allocated_width(GTK_WIDGET(area));
 	const int height = gtk_widget_get_allocated_height(GTK_WIDGET(area));
@@ -24,22 +27,32 @@ static gboolean draw(GtkDrawingArea *area, cairo_t *cr, gpointer user_data)
 	// hour hand
 	angle = 30. * (g_date_time_get_hour(current) + g_date_time_get_minute(current) / 60.);
 	cairo_rotate(cr, to_radians(angle));
-	cairo_move_to(cr, 7., 8.);
-	cairo_line_to(cr, -7., 8.);
-	cairo_line_to(cr, 0., -40.);
+	cairo_move_to(cr, 0., -40.);
+	cairo_line_to(cr, 8., 0.);
+	cairo_line_to(cr, 6.93, 4.0);
+	cairo_line_to(cr, 4.0, 6.93);
+	cairo_line_to(cr, 0., 8.);
+	cairo_line_to(cr, -4.0, 6.93);
+	cairo_line_to(cr, -6.93, 4.0);
+	cairo_line_to(cr, -8., 0.);
 	cairo_close_path(cr);
-	cairo_set_source_rgba(cr, 0.5, 0., 0.5, 1.);
+	gdk_cairo_set_source_rgba(cr, &hour_color);
 	cairo_fill(cr);
 
 	// minute hand
 	cairo_set_matrix(cr, &matrix);
 	angle = 6. * (g_date_time_get_minute(current) + g_date_time_get_second(current) / 60.);
 	cairo_rotate(cr, to_radians(angle));
-	cairo_move_to(cr, 7., 8.);
-	cairo_line_to(cr, -7., 8.);
-	cairo_line_to(cr, 0., -70.);
+	cairo_move_to(cr, 0., -70.);
+	cairo_line_to(cr, 8., 0.);
+	cairo_line_to(cr, 6.93, 4.0);
+	cairo_line_to(cr, 4.0, 6.93);
+	cairo_line_to(cr, 0., 8.);
+	cairo_line_to(cr, -4.0, 6.93);
+	cairo_line_to(cr, -6.93, 4.0);
+	cairo_line_to(cr, -8., 0.);
 	cairo_close_path(cr);
-	cairo_set_source_rgba(cr, 0., 0.5, 0.5, 0.75);
+	gdk_cairo_set_source_rgba(cr, &minute_color);
 	cairo_fill(cr);
 
 	// seconds hand
@@ -59,7 +72,7 @@ static gboolean draw(GtkDrawingArea *area, cairo_t *cr, gpointer user_data)
 		cairo_line_to(cr, 96., 0.);
 		cairo_rotate(cr, to_radians(30.));
 	}
-	cairo_set_source_rgba(cr, 0.5, 0., 0.5, 1.);
+	gdk_cairo_set_source_rgba(cr, &hour_color);
 	cairo_set_line_width(cr, 3.);
 	cairo_stroke(cr);
 
@@ -72,7 +85,7 @@ static gboolean draw(GtkDrawingArea *area, cairo_t *cr, gpointer user_data)
 		}
 		cairo_rotate(cr, to_radians(6.));
 	}
-	cairo_set_source_rgba(cr, 0., 0.5, 0.5, 0.75);
+	gdk_cairo_set_source_rgba(cr, &minute_color);
 	cairo_set_line_width(cr, 1.);
 	cairo_stroke(cr);
 
@@ -98,9 +111,9 @@ static void activate(GtkApplication *app, gpointer user_data)
 
 	window = gtk_application_window_new(app);
 	gtk_window_set_title(GTK_WINDOW(window), "Analog Clock");
-	gtk_window_set_default_size(GTK_WINDOW(window), 200, 200);
+	gtk_window_set_default_size(GTK_WINDOW(window), 201, 201);
 	gtk_container_add(GTK_CONTAINER(window), drawing_area);
-	g_timeout_add(1000, tick, drawing_area);
+	g_timeout_add(100, tick, drawing_area);
 
 	gtk_widget_show_all(window);
 }
