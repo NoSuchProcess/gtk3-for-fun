@@ -1,0 +1,5 @@
+project('gtk3clock', 'c', version: '1.0')
+add_project_arguments('-Wno-unused-parameter', language: 'c')
+gtk3_dep = dependency('gtk+-3.0')
+cairo_dep = dependency('cairo')
+executable('clock', 'clock.c', dependencies: [gtk3_dep, cairo_dep])
