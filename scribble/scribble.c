@@ -225,7 +225,7 @@ GtkWidget *do_drawingarea(GtkApplication *app, gpointer user_data)
 		g_signal_connect(da, "draw", G_CALLBACK(checkerboard_draw), NULL);
 
 		g_signal_connect(da, "motion-notify-event", G_CALLBACK(checkerboard_motion_notify_event), NULL);
-		// g_signal_connect(da, "button-press-event", G_CALLBACK(checkerboard_button_press_event), NULL);
+		g_signal_connect(da, "button-press-event", G_CALLBACK(checkerboard_button_press_event), NULL);
 		/* Ask to receive events the drawing area doesn't normally subscribe to */
 		gtk_widget_set_events(da, gtk_widget_get_events(da)
 				      | GDK_BUTTON1_MOTION_MASK | GDK_BUTTON2_MOTION_MASK | GDK_BUTTON3_MOTION_MASK
