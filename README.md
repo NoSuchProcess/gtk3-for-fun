@@ -17,3 +17,9 @@ RGB color picker.
 Analog clocks.
 
 ![clock.png](screenshots/clock.png)
+
+### scribble
+
+Draggable checkerboard and scribble area.
+
+![scribble.png](screenshots/scribble.png)
