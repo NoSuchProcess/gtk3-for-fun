@@ -14,20 +14,23 @@ static gboolean drawing_draw(GtkWidget *widget, cairo_t *cr, gpointer user_data)
 
 	const int width = gtk_widget_get_allocated_width(widget);
 	const int height = gtk_widget_get_allocated_height(widget);
+	const int x[6] = {
+		0, width / 5, (width * 2) / 5, (width * 3) / 5, (width * 4) / 5, width
+	};
 
-	cairo_rectangle(cr, 0, 0, width / 5, height);
+	cairo_rectangle(cr, x[0], 0, x[1] - x[0], height);
 	cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
 	cairo_fill(cr);
-	cairo_rectangle(cr, width / 5, 0, width / 5, height);
+	cairo_rectangle(cr, x[1], 0, x[2] - x[1], height);
 	cairo_set_source_rgba(cr, 0.75, 0.75, 0.75, 1.0);
 	cairo_fill(cr);
-	cairo_rectangle(cr, width * 2 / 5, 0, width / 5, height);
+	cairo_rectangle(cr, x[2], 0, x[3] - x[2], height);
 	cairo_set_source_rgba(cr, 0.50, 0.50, 0.50, 1.0);
 	cairo_fill(cr);
-	cairo_rectangle(cr, width * 3 / 5, 0, width / 5, height);
+	cairo_rectangle(cr, x[3], 0, x[4] - x[3], height);
 	cairo_set_source_rgba(cr, 0.25, 0.25, 0.25, 1.0);
 	cairo_fill(cr);
-	cairo_rectangle(cr, width * 4 / 5, 0, width / 5, height);
+	cairo_rectangle(cr, x[4], 0, x[5] - x[4], height);
 	cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
 	cairo_fill(cr);
 
