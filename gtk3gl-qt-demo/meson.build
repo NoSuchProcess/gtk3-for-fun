@@ -1,0 +1,8 @@
+project('gtk3gl', 'c', version: '1.0')
+gnome = import('gnome')
+m_dep = meson.get_compiler('c').find_library('m', required: false)
+glib_dep = dependency('glib-2.0')
+gtk_dep = dependency('gtk+-3.0')
+gl_dep = dependency('epoxy')
+resources = gnome.compile_resources('shader', 'shader.gresource.xml')
+executable('gtk3gl', sources: ['main.c', 'vertices.c', resources], dependencies: [m_dep, glib_dep, gtk_dep, gl_dep])
